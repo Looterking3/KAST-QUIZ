@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KAST Convert – Full 45 Question Quiz</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f1f1f1;
+        padding: 20px;
+    }
+    .quiz-box {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 6px solid #4CAF50;
+        border-radius: 6px;
+    }
+    button {
+        background: #4CAF50;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #45a049;
+    }
+    .result {
+        margin-top: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .correct { color: green; }
+    .incorrect { color: red; }
+</style>
+</head>
+<body>
+
+<h1>KAST Convert — Interactive 45 Question Quiz</h1>
+
+<div id="quiz-container"></div>
+
+<script>
+// ===============================
+// ALL 45 QUESTIONS
+// ===============================
+
+const questions = [
+    { q:"What is the main purpose of KAST Convert?", options:["Hold crypto long-term","Automatically convert crypto into stablecoins","Mine cryptocurrency","Send crypto to other users"], correct:1 },
+    { q:"What do users send funds to when using KAST Convert?", options:["Staking pool","Liquidity vault","Liquidation address","Savings account"], correct:2 },
+    { q:"When does conversion happen?", options:["After 48 hours","User approval","Immediately on confirmation","At midnight"], correct:2 },
+    { q:"Crypto converts into what?", options:["Bitcoin","NFTs","Stablecoins","Fiat cash"], correct:2 },
+    { q:"Why convert instantly?", options:["Mining","Prevent volatility","Higher staking","Government rule"], correct:1 },
+    { q:"Which tokens can be converted?", options:["Real estate tokens only","Major cryptos","Dogecoin only","Fiat only"], correct:1 },
+    { q:"What must the user copy?", options:["Merchant ID","Liquidation address","Tax code","Gift code"], correct:1 },
+    { q:"What if unsupported tokens are sent?", options:["Returned","Burned","May be lost","Become double"], correct:2 },
+    { q:"Converted balance becomes?", options:["Locked","Spendable","Staked","Gone"], correct:1 },
+    { q:"Conversion rate is based on?", options:["Yesterday price","User price","Live market","Gov price"], correct:2 },
+
+    { q:"What does timing prevent?", options:["Delay","Volatility risk","Higher fees","NFT loss"], correct:1 },
+    { q:"Supported asset type?", options:["Cross-chain only","Memecoins","Major tokens","Stablecoins only"], correct:2 },
+    { q:"Funds appear when?", options:["After 3 days","On confirmation","Manual approval","Phone call"], correct:1 },
+    { q:"Supported device?", options:["Windows","Mac","iOS + Android","Browser only"], correct:2 },
+    { q:"KAST Convert avoids?", options:["Bank risk","Volatility","Identity theft","Tax issues"], correct:1 },
+    { q:"Why is it called liquidation address?", options:["Melts NFTs","Converts instantly","Deletes accounts","Liquidates wallet"], correct:1 },
+    { q:"First step?", options:["Choose merchant","Copy address","Spend","Withdraw"], correct:1 },
+    { q:"Balance type created?", options:["Frozen","Cashback","Spendable","Locked"], correct:2 },
+    { q:"Who manages liquidation?", options:["User","KAST","Visa","Apple"], correct:1 },
+    { q:"NOT required?", options:["Manual sell","Confirmation","Wallet","Account"], correct:0 },
+
+    { q:"Wrong amount sent?", options:["Fails","Lost","Converted normally","Refund"], correct:2 },
+    { q:"Stablecoins are?", options:["Interest gaining","Price-stable","Speculative","Time-limited"], correct:1 },
+    { q:"Before using Convert?", options:["KYC","Gov letter","Referral","Subscription"], correct:0 },
+    { q:"Conversion moment depends on?", options:["Time","Locale","Blockchain confirm","KAST approval"], correct:2 },
+    { q:"Feature optimizes for?", options:["Staking","Speed","Savings","NFTs"], correct:1 },
+    { q:"User experience?", options:["Manual","Automated","Delayed","Risky"], correct:1 },
+    { q:"End result?", options:["Fiat transfer","Locked crypto","Spendable stablecoins","NFT"], correct:2 },
+    { q:"Spendable asset?", options:["Real estate","Gold","Stablecoins","Derivatives"], correct:2 },
+    { q:"Users must verify?", options:["Tax ID","Passport","Correct address","Merchant"], correct:2 },
+    { q:"Best for?", options:["Long holding","Quick spending","Mining","Yield"], correct:1 },
+
+    { q:"Conversion is?", options:["Complex","Automatic","User-controlled","Optional"], correct:1 },
+    { q:"Trigger event?", options:["Initiation","Smart contract deploy","Blockchain confirmation","Wallet creation"], correct:2 },
+    { q:"Converted funds go to?", options:["Cold wallet","Burn","Spendable balance","Tax dept"], correct:2 },
+    { q:"Best user group?", options:["Traders","Stable spenders","NFT collectors","Miners"], correct:1 },
+    { q:"NOT needed?", options:["Address","Manual price","Wallet","Account"], correct:1 },
+    { q:"Spendable balance lets user?", options:["Trade","Buy NFTs","Pay with card","Stake"], correct:2 },
+    { q:"Automatic liquidation advantage?", options:["Yield","Convenience","Tax","Infinite tx"], correct:1 },
+    { q:"Cannot convert?", options:["Supported tokens","Unsupported tokens","BTC","ETH"], correct:1 },
+    { q:"Liquidation address tied to?", options:["Card","KAST account","ID","Merchant"], correct:1 },
+    { q:"Double-check address because?", options:["Refund easy","Cashback","To avoid loss","Faster confirm"], correct:2 },
+
+    { q:"KAST notifies via?", options:["Flag","App update","SMS only","Call"], correct:1 },
+    { q:"After conversion user gets?", options:["Gift card","Stablecoins","NFT credit","Rewards"], correct:1 },
+    { q:"System built to be?", options:["Regulated","Instant","Slow","Manual"], correct:1 },
+    { q:"Feature reduces?", options:["Boredom","Fear of volatility","Excitement","Overconfidence"], correct:1 },
+    { q:"Best summary?", options:["Investment tool","Auto crypto→stablecoin spender","Blockchain explorer","Bank system"], correct:1 }
+];
+
+// ===============================
+// BUILD QUIZ
+// ===============================
+
+const quizContainer = document.getElementById("quiz-container");
+
+questions.forEach((item, index) => {
+    let box = document.createElement("div");
+    box.className = "quiz-box";
+
+    let optionsHTML = "";
+    item.options.forEach((opt, i) => {
+        optionsHTML += `
+            <label>
+                <input type="radio" name="q${index}" value="${i}"> ${opt}
+            </label><br>
+        `;
+    });
+
+    box.innerHTML = `
+        <b>${index + 1}. ${item.q}</b><br><br>
+        ${optionsHTML}
+        <button onclick="checkAnswer(${index})">Submit Answer</button>
+        <div id="result${index}" class="result"></div>
+    `;
+
+    quizContainer.appendChild(box);
+});
+
+// ===============================
+// CHECK ANSWERS
+// ===============================
+
+function checkAnswer(i) {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    const result = document.getElementById(`result${i}`);
+
+    if (!selected) {
+        result.innerHTML = "<span class='incorrect'>Please select an option!</span>";
+        return;
+    }
+
+    if (parseInt(selected.value) === questions[i].correct) {
+        result.innerHTML = "<span class='correct'>Correct ✔</span>";
+    } else {
+        result.innerHTML = `<span class='incorrect'>Wrong ✘<br>Correct Answer: ${questions[i].options[questions[i].correct]}</span>`;
+    }
+}
+
+</script>
+
+</body>
+</html>
